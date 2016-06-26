@@ -1,0 +1,6 @@
+[submodule "Talos"]
+	path = Talos
+	url = https://github.com/JamesPane-Joyce/Talos
+[submodule "DCEC_Library"]
+	path = DCEC_Library
+	url = https://github.com/JamesPane-Joyce/DCEC_Library

@@ -14,5 +14,11 @@ These are included in the project as git submodules inside this repository.
 If you wish to use this repository, you need to run the following command:
 ```
 git clone --recursive https://github.com/RAIRLab/Talos-Flask
+cd Talos-Flask/Talos/SPASS-3.7
+./configure
+make
 ```
 which will give you both the repository and its associated submodules.
+
+
+Included are files in hosting this repository on the IBM BlueMix platform.

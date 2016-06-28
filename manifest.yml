@@ -1,0 +1,4 @@
+---
+applications:
+- name: bluemix-talos-flask
+  memory: 128M

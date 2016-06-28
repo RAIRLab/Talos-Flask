@@ -1,34 +1,52 @@
+"""
+Flask application for running the Talos automated theorem prover
+"""
+
 from __future__ import print_function
-from flask import Flask, Markup, render_template, request
+import os
 import time
-from Talos.talos import *
+
+from flask import Flask, Markup, render_template, request
+from Talos.talos import spassContainer
 from Talos.DCEC_Library.DCECContainer import DCECContainer
 
-app = Flask(__name__)
+APP = Flask(__name__)
 
 
-@app.route('/')
+@APP.route('/')
 def entry():
+    """
+    Display main index page where the user can enter formulas and defintions to run
+    against the Talos prover
+
+    :return: rendered template of index
+    """
     return render_template('index.html')
 
 
-@app.route('/prove', methods=['POST'])
+@APP.route('/prove', methods=['POST'])
 def run_talos():
-    t = time.time()
+    """
+    Given what the user inputted, run it against the Talos prover, outputting the parsed respose
+    in string format
+
+    :return: string containing Talos response of proof attempt
+    """
+    run_time = time.time()
 
     prototypes = str(request.values.get('prototypes').strip()).split("#")
     axioms = str(request.values.get('axioms').strip()).split("#")
     conjecture = str(request.values.get('conjecture').strip())
 
     dcec_container = DCECContainer()
-    dcec_container.namespace.addBasicDCEC()
-    dcec_container.namespace.addBasicLogic()
-    dcec_container.namespace.addBasicNumerics()
+    dcec_container.namespace.add_basic_dcec()
+    dcec_container.namespace.add_basic_logic()
+    dcec_container.namespace.add_basic_numerics()
 
     for prototype in prototypes:
         if len(prototype) == 0:
             continue
-        dcec_container.namespace.addTextFunction(prototype)
+        dcec_container.namespace.add_text_function(prototype)
 
     ctr = 0
     for axiom in axioms:
@@ -37,10 +55,11 @@ def run_talos():
             return "ERROR ON LINE %d" % ctr
         ctr += 1
 
-    print("start")
-    spass = spassContainer(dcec_container, conjecture, True, timeout=10, rules=spassContainer.temporalRules.keys() + spassContainer.basicLogicRules.keys())
+    spass = spassContainer(dcec_container, conjecture, True, timeout=10,
+                           rules=spassContainer.temporalRules.keys() +
+                           spassContainer.basicLogicRules.keys())
 
-    t = time.time() - t
+    run_time = time.time() - run_time
 
     return_string = ""
     if spass.result[0] != "Error Found":
@@ -54,11 +73,10 @@ def run_talos():
         return_string += spass.input + ("\n" * 3) + "\n"
         return_string += spass.errors + "\n"
 
-    return_string += "Ran for " + str(round(t * 10000) / 10000) + " seconds.\n"
-    print("done")
+    return_string += "Ran for " + str(round(run_time * 10000) / 10000) + " seconds.\n"
     return Markup(return_string.replace("\n", "<br />"))
 
 
 if __name__ == "__main__":
-    port = os.getenv('PORT', 5000)
-    app.run(host='0.0.0.0', port=int(port))
+    PORT = os.getenv('PORT', 5000)
+    APP.run(host='0.0.0.0', port=int(PORT))

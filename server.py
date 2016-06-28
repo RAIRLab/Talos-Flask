@@ -2,7 +2,7 @@ from __future__ import print_function
 from flask import Flask, Markup, render_template, request
 import time
 from Talos.talos import *
-from DCEC_Library.DCECContainer import  *
+from Talos.DCEC_Library.DCECContainer import DCECContainer
 
 app = Flask(__name__)
 

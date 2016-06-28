@@ -38,7 +38,7 @@ def run_talos():
         ctr += 1
 
     print("start")
-    spass = spassContainer(dcec_container, conjecture, True, timeout=10, rules=["MODUS_PONENS"])
+    spass = spassContainer(dcec_container, conjecture, True, timeout=10, rules=spassContainer.temporalRules.keys() + spassContainer.basicLogicRules.keys())
 
     t = time.time() - t
 

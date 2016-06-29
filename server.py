@@ -7,7 +7,7 @@ import os
 import time
 
 from flask import Flask, Markup, render_template, request
-from Talos.talos import spassContainer
+from Talos.talos import SpassContainer
 from Talos.DCEC_Library.DCECContainer import DCECContainer
 
 APP = Flask(__name__)
@@ -50,14 +50,12 @@ def run_talos():
 
     ctr = 0
     for axiom in axioms:
-        print(axiom)
         if len(axiom) != 0 and not dcec_container.addStatement(axiom):
             return "ERROR ON LINE %d" % ctr
         ctr += 1
 
-    spass = spassContainer(dcec_container, conjecture, True, timeout=10,
-                           rules=spassContainer.temporalRules.keys() +
-                           spassContainer.basicLogicRules.keys())
+    spass = SpassContainer(dcec_container, conjecture, True, timeout=10,
+                           rules=["MODUS_PONENS", "CONJUNCTION_INTRODUCTION"])
 
     run_time = time.time() - run_time
 

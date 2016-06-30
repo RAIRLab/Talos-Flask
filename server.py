@@ -8,7 +8,7 @@ import time
 
 from flask import Flask, Markup, render_template, request
 from Talos.talos import SpassContainer
-from Talos.DCEC_Library.DCECContainer import DCECContainer
+from Talos.DCEC_Library.dcec_container import DCECContainer
 
 APP = Flask(__name__)
 

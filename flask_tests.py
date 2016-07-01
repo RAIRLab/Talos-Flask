@@ -1,20 +1,22 @@
 import unittest
 
-import server
+from server import APP as app
 
 
 class TalosTestCase(unittest.TestCase):
     def setUp(self):
-        server.APP.config['TESTING'] = True
-        self.app = server.APP.test_client()
+        app.config['TESTING'] = True
+        self.app = app.test_client()
+        self.app.testing = True
 
     def test_index(self):
         req = self.app.get('/')
-        assert req.data.count("<input") == 4
-        assert 'name="prototypes"' in req.data
-        assert 'name="axioms"' in req.data
-        assert 'name="conjecture"' in req.data
-        assert 'value="Prove"' in req.data
+        response = str(req.data)
+        assert response.count("<input") == 4
+        assert 'name="prototypes"' in response
+        assert 'name="axioms"' in response
+        assert 'name="conjecture"' in response
+        assert 'value="Prove"' in response
 
     def test_prover(self):
         req = self.app.post('/prove', data=dict(
@@ -23,7 +25,10 @@ class TalosTestCase(unittest.TestCase):
                    "greet(James,hello(world))",
             conjecture="greet(James,hello(John))"
         ))
-        assert "Proof Found<br />" \
+
+        response = str(req.data)
+
+        check_string = "Proof Found<br />" \
                "Proof:<br />" \
                "(greet James (hello world))<br />" \
                "(forAll (Agent b0) (implies (greet James (hello world)) (greet James " \
@@ -44,9 +49,10 @@ class TalosTestCase(unittest.TestCase):
                "b0 c0) c0))))<br />" \
                "(forAll (Boolean b0) (forAll (Boolean c0) (implies b0 (implies (implies b0 c0) " \
                "c0))))<br />" \
-               "(leads_to_conclusion (greet James (hello John)))<br />" in req.data
+               "(leads_to_conclusion (greet James (hello John)))<br />"
 
-        a = "hello adlafd" \
-            ";af"
+        for string in check_string.split("<br />"):
+            assert string in response
+
 if __name__ == "__main__":
     unittest.main()

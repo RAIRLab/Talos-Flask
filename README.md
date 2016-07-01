@@ -1,6 +1,8 @@
 Talos-Flask
 ===========
 
+[![Build Status](https://travis-ci.org/RAIRLab/Talos-Flask.svg?branch=master)](https://travis-ci.org/RAIRLab/Talos-Flask)
+
 Takes the Talos automated theorem prover and provides a flask wrapper around it so that it could be run as a web service.
 
 This application relies on one dependency (that in turn has its own dependency) that are included as git submodules:

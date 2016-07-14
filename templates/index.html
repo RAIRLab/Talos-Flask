@@ -10,6 +10,11 @@
             font-size: 12pt;
             margin-bottom: 5px;
         }
+        textarea {
+            width: 1000px;
+            font-size: 12pt;
+            height: 200px;
+        }
     </style>
 </head>
 <body>
@@ -18,9 +23,9 @@
 </div>
 
 <form action="prove" method="POST">
-    <input type="text" name="prototypes" placeholder="Prototypes" /><br /><br />
-    <input type="text" name="axioms" placeholder="Axioms" /><br /><br />
-    <input type="text" name="conjecture" placeholder="Conjecture" /><br /><br />
+    <textarea name="prototypes" placeholder="Prototypes"></textarea><br /><br />
+    <textarea name="axioms" placeholder="Axioms"></textarea><br /><br />
+    <input type="text"  name="conjecture" placeholder="Conjecture" /><br /><br />
     <input type="submit" value="Prove" />
 </form>
 

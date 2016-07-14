@@ -24,6 +24,14 @@ def entry():
     return render_template('index.html')
 
 
+def _clean_input(string):
+    string = str(string).strip().replace("\r", "").replace("\n", "#")
+    while "##" in string:
+        string = string.replace("##", "#")
+    string = string.split("#")
+    return string
+
+
 @APP.route('/prove', methods=['POST'])
 def run_talos():
     """
@@ -34,8 +42,8 @@ def run_talos():
     """
     run_time = time.time()
 
-    prototypes = str(request.values.get('prototypes').strip()).split("#")
-    axioms = str(request.values.get('axioms').strip()).split("#")
+    prototypes = _clean_input(request.values.get('prototypes'))
+    axioms = _clean_input(request.values.get('axioms').strip())
     conjecture = str(request.values.get('conjecture').strip())
 
     dcec_container = DCECContainer()
@@ -54,8 +62,9 @@ def run_talos():
             return "ERROR ON LINE %d" % ctr
         ctr += 1
 
-    spass = SpassContainer(dcec_container, conjecture, True, timeout=10,
-                           rules=["MODUS_PONENS", "CONJUNCTION_INTRODUCTION"])
+    spass = SpassContainer(dcec_container, conjecture, True, timeout=100,
+                           rules=["MODUS_PONENS", "CONJUNCTION_INTRODUCTION", "SIMPLIFICATION",
+                                  "SIMPLIFICATION1", "WEAKENING", "DEMORGAN"])
 
     run_time = time.time() - run_time
 
